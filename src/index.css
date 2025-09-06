@@ -1,0 +1,15 @@
+
+@import "tailwindcss";
+
+/* Make Prata the default font site-wide */
+@layer base {
+  :root { --default-font-family: "Prata", serif; } /* <- key for Tailwind v4 preflight */
+  html, body { font-family: var(--default-font-family) !important; }
+}
+
+/* Optional: smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* your zoom rules… */
+.card-hover img { transition: transform 5s cubic-bezier(0.19, 1, 0.22, 1); }
+.card-hover:hover img { transform: scale(1.25); }
