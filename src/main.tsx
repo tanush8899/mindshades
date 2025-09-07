@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import SeriesPage from "./pages/SeriesPage";
 import ArtworkDetail from "./pages/ArtworkDetail";
-import { Analytics } from "@vercel/analytics/next"
+
 
 
 
