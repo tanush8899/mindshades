@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <motion.div initial="hidden" animate="visible" variants={container}>
       <section className="w-full px-[10vw] pt-6 text-center">
-        <motion.h1 className="text-5xl font-normal" variants={item}>Gallery</motion.h1>
+        <motion.h1 className="text-5xl font-normal" variants={item}>tanush</motion.h1>
         <motion.p className="mt-2 text-lg" variants={item}>Experience all of Mindshades.</motion.p>
       </section>
 
