@@ -1,12 +1,12 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { seriesList } from "../data/artworks";
-import { useEffect, useState, MouseEvent } from "react";
+import { useEffect, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react"; // type-only import ✅
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isSeriesActive = location.pathname.startsWith("/series/");
 
@@ -27,7 +27,7 @@ export default function NavBar() {
   }, [open]);
 
   // Make "same-page" clicks do something (scroll to top & close menu)
-  const handleSameOrNewNav = (e: MouseEvent, to: string) => {
+  const handleSameOrNewNav = (e: ReactMouseEvent, to: string) => {
     const current = location.pathname;
     if (current === to) {
       e.preventDefault();
@@ -43,7 +43,11 @@ export default function NavBar() {
     <header className="sticky top-0 z-40 bg-white">
       <div className="w-full px-[10vw] py-6 flex items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="block leading-tight" onClick={(e) => handleSameOrNewNav(e, "/")}>
+        <Link
+          to="/"
+          className="block leading-tight"
+          onClick={(e) => handleSameOrNewNav(e, "/")}
+        >
           <div className="font-semibold text-3xl">Mindshades</div>
           <div className="text-sm md:text-base font-normal opacity-70">
             by Roshna Sanjay
@@ -55,9 +59,7 @@ export default function NavBar() {
           {/* About: underline when active */}
           <NavLink
             to="/about"
-            className={({ isActive }) =>
-              `text-xl ${isActive ? "underline" : ""}`
-            }
+            className={({ isActive }) => `text-xl ${isActive ? "underline" : ""}`}
             onClick={(e) => handleSameOrNewNav(e, "/about")}
           >
             About
@@ -66,7 +68,9 @@ export default function NavBar() {
           {/* Series trigger: underline when any series route is active */}
           <div className="relative inline-block group">
             <button
-              className={`text-xl leading-none select-none ${isSeriesActive ? "underline" : "hover:underline"}`}
+              className={`text-xl leading-none select-none ${
+                isSeriesActive ? "underline" : "hover:underline"
+              }`}
               aria-haspopup="true"
               aria-expanded={isSeriesActive}
               aria-controls="series-menu-desktop"
@@ -94,7 +98,9 @@ export default function NavBar() {
                   <NavLink
                     to={`/series/${s.slug}`}
                     className={({ isActive }) =>
-                      `block py-2 text-lg leading-tight ${isActive ? "underline" : "hover:underline"}`
+                      `block py-2 text-lg leading-tight ${
+                        isActive ? "underline" : "hover:underline"
+                      }`
                     }
                     onClick={(e) => handleSameOrNewNav(e, `/series/${s.slug}`)}
                   >
@@ -136,7 +142,7 @@ export default function NavBar() {
       <AnimatePresence>
         {open && (
           <motion.nav
-            className="sm:hidden fixed left-0 right-0 top=[100px] top-[100px] z-40"
+            className="sm:hidden fixed left-0 right-0 top-[100px] z-40"
             initial={{ y: -16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -16, opacity: 0 }}
