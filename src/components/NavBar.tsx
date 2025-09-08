@@ -146,7 +146,7 @@ export default function NavBar() {
             initial={{ y: -16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -16, opacity: 0 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="bg-white border-t border-black/10">
               <ul className="py-2">
