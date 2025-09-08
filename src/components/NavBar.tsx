@@ -1,11 +1,14 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { seriesList } from "../data/artworks";
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const isSeriesActive = location.pathname.startsWith("/series/");
 
   // Close the mobile menu on route change
   useEffect(() => {
@@ -23,11 +26,24 @@ export default function NavBar() {
     }
   }, [open]);
 
+  // Make "same-page" clicks do something (scroll to top & close menu)
+  const handleSameOrNewNav = (e: MouseEvent, to: string) => {
+    const current = location.pathname;
+    if (current === to) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setOpen(false);
+    } else {
+      // allow normal navigation AND close the menu
+      setOpen(false);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white">
       <div className="w-full px-[10vw] py-6 flex items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="block leading-tight">
+        <Link to="/" className="block leading-tight" onClick={(e) => handleSameOrNewNav(e, "/")}>
           <div className="font-semibold text-3xl">Mindshades</div>
           <div className="text-sm md:text-base font-normal opacity-70">
             by Roshna Sanjay
@@ -36,17 +52,23 @@ export default function NavBar() {
 
         {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-12">
-          {/* About now plain text (no hover underline) */}
-          <NavLink to="/about" className="text-xl">
+          {/* About: underline when active */}
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              `text-xl ${isActive ? "underline" : ""}`
+            }
+            onClick={(e) => handleSameOrNewNav(e, "/about")}
+          >
             About
           </NavLink>
 
-          {/* Series trigger now has hover underline (swap) */}
+          {/* Series trigger: underline when any series route is active */}
           <div className="relative inline-block group">
             <button
-              className="text-xl leading-none select-none hover:underline"
+              className={`text-xl leading-none select-none ${isSeriesActive ? "underline" : "hover:underline"}`}
               aria-haspopup="true"
-              aria-expanded="false"
+              aria-expanded={isSeriesActive}
               aria-controls="series-menu-desktop"
             >
               Series
@@ -69,19 +91,22 @@ export default function NavBar() {
             >
               {seriesList.map((s) => (
                 <li key={s.slug}>
-                  <Link
+                  <NavLink
                     to={`/series/${s.slug}`}
-                    className="block py-2 text-lg leading-tight hover:underline"
+                    className={({ isActive }) =>
+                      `block py-2 text-lg leading-tight ${isActive ? "underline" : "hover:underline"}`
+                    }
+                    onClick={(e) => handleSameOrNewNav(e, `/series/${s.slug}`)}
                   >
                     {s.name}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
           </div>
         </nav>
 
-        {/* Mobile: Hamburger (unchanged animation) */}
+        {/* Mobile: Hamburger */}
         <button
           type="button"
           className="sm:hidden relative h-8 w-10 -mr-1 inline-flex items-center justify-center"
@@ -111,7 +136,7 @@ export default function NavBar() {
       <AnimatePresence>
         {open && (
           <motion.nav
-            className="sm:hidden fixed left-0 right-0 top-[72px] z-40"
+            className="sm:hidden fixed left-0 right-0 top=[100px] top-[100px] z-40"
             initial={{ y: -16, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -16, opacity: 0 }}
@@ -119,11 +144,27 @@ export default function NavBar() {
           >
             <div className="bg-white border-t border-black/10">
               <ul className="py-2">
+                {/* Gallery */}
+                <li>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      `block px-5 py-4 text-lg ${isActive ? "underline" : ""} active:opacity-60`
+                    }
+                    onClick={(e) => handleSameOrNewNav(e, "/")}
+                  >
+                    Gallery
+                  </NavLink>
+                </li>
+
                 {/* About */}
                 <li>
                   <NavLink
                     to="/about"
-                    className="block px-5 py-4 text-lg active:opacity-60"
+                    className={({ isActive }) =>
+                      `block px-5 py-4 text-lg ${isActive ? "underline" : ""} active:opacity-60`
+                    }
+                    onClick={(e) => handleSameOrNewNav(e, "/about")}
                   >
                     About
                   </NavLink>
@@ -144,12 +185,15 @@ export default function NavBar() {
                 {/* Series items */}
                 {seriesList.map((s) => (
                   <li key={s.slug}>
-                    <Link
+                    <NavLink
                       to={`/series/${s.slug}`}
-                      className="block px-5 py-4 text-lg active:opacity-60"
+                      className={({ isActive }) =>
+                        `block px-5 py-4 text-lg ${isActive ? "underline" : ""} active:opacity-60`
+                      }
+                      onClick={(e) => handleSameOrNewNav(e, `/series/${s.slug}`)}
                     >
                       {s.name}
-                    </Link>
+                    </NavLink>
                   </li>
                 ))}
               </ul>

@@ -27,9 +27,25 @@ export default function Home() {
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
           {artworks.map((a) => (
             <motion.div key={a.id} variants={item}>
-              <Link to={`/art/${a.id}`} className="block overflow-hidden rounded-md card-hover">
+              {/* Add `group` and an active selector that targets the inner img */}
+              <Link
+                to={`/art/${a.id}`}
+                className="
+                  group block overflow-hidden rounded-md card-hover
+                  active:[&_.card-img]:scale-105
+                "
+              >
                 <div className="aspect-[4/5] w-full overflow-hidden bg-black/5">
-                  <img src={a.imageUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  <img
+                    src={a.imageUrl}
+                    alt=""
+                    loading="lazy"
+                    className="
+                      card-img h-full w-full object-cover
+                      transform-gpu will-change-transform
+                      transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)]
+                    "
+                  />
                 </div>
               </Link>
             </motion.div>
